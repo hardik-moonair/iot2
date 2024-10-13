@@ -3,10 +3,12 @@ import UploadForm from "@/components/Upload";
 import UploadFormMq from "@/components/Upload copy";
 
 export default function Home() {
-    return (
+    return (<>
     // <UploadForm/>
-    <><UploadFormMq/>
-    <MqttPublisher/></>
+    // <UploadFormMq/>
+    {/* <MqttPublisher/> */}
+    <UploadForm/>
+    </>
 
 )
 }
