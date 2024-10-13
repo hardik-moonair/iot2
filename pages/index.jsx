@@ -4,10 +4,10 @@ import UploadFormMq from "@/components/Upload copy";
 
 export default function Home() {
     return (<>
-    // <UploadForm/>
+    {/* // <UploadForm/> */}
     // <UploadFormMq/>
     {/* <MqttPublisher/> */}
-    <UploadForm/>
+    {/* <UploadForm/> */}
     </>
 
 )

@@ -17,22 +17,44 @@ const UploadFormMq = () => {
       setMessage('Please select a PDF file.');
       return;
     }
+
+    console.log('Connecting to MQTT broker...');
     
-    const client = mqtt.connect('ws://64.23.134.94:9001');
+    // Remove the 'port' option since 'wss://' implies WebSocket over TLS (secure)
+    const client = mqtt.connect('wss://z11778cc.ala.asia-southeast1.emqxsl.com:8084/mqtt', {
+      username: 'moon',
+      password: 'moon',
+    });
 
     client.on('connect', () => {
       console.log('Connected to MQTT broker');
-      
+
       const reader = new FileReader();
       reader.onload = function() {
+        console.log('File read successfully, preparing to publish.');
         const fileData = new Uint8Array(reader.result); // Convert file to binary
-        client.publish('file/print', fileData);  // Publish to 'file/print' topic
-        setMessage('File uploaded and sent for printing.');
+
+        client.publish('file/print', fileData, {}, (err) => {
+          if (err) {
+            console.error('Failed to publish message:', err);
+            setMessage('Failed to upload file: ' + err.message);
+          } else {
+            console.log('File published successfully.');
+            setMessage('File uploaded and sent for printing.');
+          }
+        });
       };
+
+      reader.onerror = function(e) {
+        console.error('File reading error:', e);
+        setMessage('Error reading file.');
+      };
+
       reader.readAsArrayBuffer(file);  // Read file as an ArrayBuffer
     });
 
     client.on('error', (error) => {
+      console.error('MQTT connection error:', error);
       setMessage('Failed to connect to MQTT broker: ' + error.message);
     });
   };
